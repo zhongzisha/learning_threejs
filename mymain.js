@@ -33,6 +33,7 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 // document.addEventListener( 'pointermove', onPointerMove );
 document.addEventListener( 'click', onPointerClicked );
+window.addEventListener('resize', onWindowResize);
 
 
 function createSprite(size, transparent, opacity, color, spriteNumber, range) {
@@ -82,7 +83,11 @@ function onPointerClicked( event ) {
         if ( res && res.object ) {
             selectedObject = res.object;
             console.log(selectedObject.name);
+        } else {
+            console.log('res is null');
         }
+    } else {
+        console.log('no intersects');
     }
 }
 
@@ -108,6 +113,12 @@ function onPointerMove( event ) {
 }
 
 
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    controls.update();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
 
 function animate() {
     requestAnimationFrame( animate );
@@ -116,13 +127,9 @@ function animate() {
 }
 
 if ( WebGL.isWebGLAvailable() ) {
-
     // Initiate function or other initializations here
     animate();
-
 } else {
-
     const warning = WebGL.getWebGLErrorMessage();
     document.getElementById( 'container' ).appendChild( warning );
-
 }
